@@ -1,20 +1,63 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useEffect } from "react";
+import Database from "./Database";
+import SearchScreen from "./screens/SearchScreen";
+import AddScreen from "./screens/AddScreen";
+import HomeScreen from "./screens/HomeScreen";
+import UpdateScreen from "./screens/UpdateScreen";
+import { Ionicons } from '@expo/vector-icons';
 
-export default function App() {
+
+
+const Tab = createBottomTabNavigator();
+
+const App = () => {
+  useEffect(() => {
+    Database.initDatabase();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator initialRouteName="Home">
+        <Tab.Screen 
+          name="Add" 
+          component={AddScreen} 
+          options={{
+            tabBarLabel: 'Add',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="add-circle-outline" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen 
+          name="Home" 
+          component={HomeScreen} 
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen 
+          name="Search" 
+          component={SearchScreen} 
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="search-outline" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen 
+          name="Update" 
+          component={UpdateScreen}
+          options={{ tabBarButton: () => null }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
