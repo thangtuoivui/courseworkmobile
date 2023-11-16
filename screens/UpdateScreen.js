@@ -1,10 +1,11 @@
 
 import React, { useEffect, useState } from "react";
-import {SelectList } from 'react-native-dropdown-select-list'
 import { useIsFocused } from "@react-navigation/native";
 import { Dropdown } from "react-native-element-dropdown";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {
   Alert,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -12,6 +13,7 @@ import {
   View,
 } from "react-native";
 import Database from "../Database";
+import moment from "moment";
 
 
 const UpdateScreen = ({ route, navigation }) => {
@@ -28,8 +30,8 @@ const UpdateScreen = ({ route, navigation }) => {
 
   const dropDifData = [
     {label: 'Easy', value:'Easy'},
-    {label: 'Morderate', value:'Morderate'},
-    {label: 'Difficult', value:'Difficult'},
+    {label: 'Normal', value:'Normal'},
+    {label: 'Hard', value:'Hard'},
 ]
 
 const dropParkData = [
@@ -57,11 +59,20 @@ const renderDropDown = ( item ) => {
     fetchData();
   },[hike]);
   
-  // dif_level.push({key:'1', value:'Easy'});
-  // dif_level.push({key:'2', value:'Medium'});
-  // dif_level.push({key:'3', value:'Hard'});
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
 
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (datetime) => {
+    setDate(moment(datetime).format("DD/MM/YYYY"));
+    hideDatePicker();
+  };
 
   const handleEditHike = async (id) => {
     if (!name || !location|| !date || !length || !description) {
@@ -92,9 +103,18 @@ const renderDropDown = ( item ) => {
       <Text style={styles.label}>Date:</Text>
       <TextInput
         style={styles.input}
+        editable={false}
         value={date}
         onChangeText={setDate}
         placeholder="Enter date"
+        onPressIn={showDatePicker}
+      />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        value={new Date()}
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
       />
       <Text style={styles.label}>Parking:</Text>
       <TextInput
@@ -148,7 +168,6 @@ const renderDropDown = ( item ) => {
         <Text style={styles.editButtonText}>Edit Hike</Text>
       </TouchableOpacity>
     </View>
-
   );
 };
 

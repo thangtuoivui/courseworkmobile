@@ -53,8 +53,8 @@ const searchHikes = (name) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "SELECT * FROM hikes Where name = ?",
-        [name],
+        "SELECT * FROM hikes WHERE name LIKE ?",
+        [`%${name}%`],
         (_, { rows }) => {
           resolve(rows._array);
         },

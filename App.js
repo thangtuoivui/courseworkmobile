@@ -25,7 +25,7 @@ const App = () => {
           component={AddScreen} 
           options={{
             tabBarLabel: 'Add',
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: ({ color="#54be4a", size }) => (
               <Ionicons name="add-circle-outline" color={color} size={size} />
             ),
           }}

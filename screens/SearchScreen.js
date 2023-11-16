@@ -11,33 +11,33 @@ import {
 import Database from "../Database";
 
 const SearchScreen = ({ navigation }) => {
-  const [hikes, setHikes] = useState([]);
-  const [name, setName] = useState("");
+  const [search, setSearch] = useState([]);
+  const [name, setName] = useState();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await Database.getHikes();
-        setHikes(data);
+        setSearch(data);
       } catch (error) {
         console.log("Error fetching hikes", error);
       }
     };
 
     fetchData();
-    }, [isFocused]);
+  }, [isFocused]);
 
-    const handleDeleteHike = async (id) => {
+  const handleDeleteHike = async (id) =>{
     await Database.deleteHike(id);
-    let data = await Database.getHikes();
-    setHikes(data);
+    let data = await Database.searchHikes(name);
+    setSearch(data);
   };
 
-  const handleSearchHike = async (name) => {
+  const handleSearchHike = async () =>{
     let data = await Database.searchHikes(name);
-    setHikes(data);
-  };
+    setSearch(data);
+  }  
 
   const renderHikeItem = ({ item }) => (
     <TouchableOpacity
@@ -53,28 +53,28 @@ const SearchScreen = ({ navigation }) => {
       </TouchableOpacity>
     </TouchableOpacity>
   );
+  
 
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
         value={name}
-        onChangeText={setName}
+        onChangeText={(text) => setName(text)}
         placeholder="Search"
       />
-      <TouchableOpacity style={styles.addButton} onPress={handleSearchHike(name)}>
-        <Text style={styles.addButtonText}>Search hike</Text>
+      <TouchableOpacity style={styles.addButton} onPress={() =>handleSearchHike()}>
+        <Text style={styles.addButtonText}>Search hike</Text> 
       </TouchableOpacity>
 
       <FlatList
-        data={hikes}
+        data={search}
         renderItem={renderHikeItem}
         keyExtractor={(item) => item.id.toString()}
       /> 
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -117,5 +117,6 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
+
 
 export default SearchScreen;

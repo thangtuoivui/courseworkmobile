@@ -12,6 +12,7 @@ import {
   Button
 } from "react-native";
 import Database from "../Database";
+import moment from "moment/moment";
 
 const AddScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -40,8 +41,8 @@ const AddScreen = ({ navigation }) => {
 
     const dropDifData = [
       {label: 'Easy', value:'Easy'},
-      {label: 'Morderate', value:'Morderate'},
-      {label: 'Difficult', value:'Difficult'},
+      {label: 'Normal', value:'Normal'},
+      {label: 'Hard', value:'Hard'},
   ]
 
   const dropParkData = [
@@ -66,7 +67,7 @@ const AddScreen = ({ navigation }) => {
   };
 
   const handleConfirm = (datetime) => {
-    setDate(String(datetime));
+    setDate(moment(datetime).format("DD/MM/YYYY"));
     hideDatePicker();
   };
 
@@ -98,7 +99,7 @@ const AddScreen = ({ navigation }) => {
       <Text style={styles.label}>Date:</Text>
       <TextInput
           style={styles.input}
-          onTouchStart={showDatePicker}
+          onPressIn={showDatePicker}
           editable={false}
           value={date}
           onChangeText={setDate}
